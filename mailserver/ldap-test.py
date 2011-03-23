@@ -1,6 +1,10 @@
-import sys, ldap
+import sys, ldap, re
 from ldap.controls import SimplePagedResultsControl
 import pickle
+
+# http://www.novell.com/communities/node/1327/sample%20code%3A%20paging%20searches%20edirectory,%20ldap
+
+page_size = 10
 
 try:
 	auth = pickle.load(open("../auth.p"))
@@ -9,32 +13,80 @@ except Exception:
 	print "ERROR: Run 'authorize.py twitter' first!"
 	exit()
 
+class SimpleLDAP:
+	def __init__(self, server, base):
+		self.server = server
+		self.base = base
+	
+	def authorize(self, dn, secret):
+		self.dn = dn
+		self.secret = secret
+		
+		# authorize server
+		ldap.set_option(ldap.OPT_REFERRALS, 0)
+		self.l = ldap.initialize(self.server)
+		self.l.protocol_version = 3
+		self.l.simple_bind_s(self.dn, self.secret)
+	
+	def find_users(self, keyword):
+		ldap_filter = "(&(objectClass=user)(givenName=*)(name=*"+re.sub('[^a-z\s]+', '', keyword)+"*))"
+		attrs = ["displayName", "c", "l", "givenName"]
+
+		lc = SimplePagedResultsControl(
+		  ldap.LDAP_CONTROL_PAGE_OID, True, (page_size,'')
+		)
+
+		scope = ldap.SCOPE_SUBTREE
+		msgid = self.l.search_ext(self.base, scope, ldap_filter, attrs, serverctrls=[lc])
+		
+		persons = []
+
+		pages = 0
+		while True:
+			pages += 1
+			#print "Getting page %d" % (pages,)
+			rtype, rdata, rmsgid, serverctrls = self.l.result3(msgid)
+			#print '%d results' % len(rdata)
+			for search, attrs in rdata:
+				try:
+					if attrs.has_key('givenName') and attrs.has_key('displayName'):
+						persons.append(attrs['displayName'][0])
+				except AttributeError, e:
+					print "Error: %s, skipping..." % str(e)
+					
+			pctrls = [
+				c
+				for c in serverctrls
+				if c.controlType == ldap.LDAP_CONTROL_PAGE_OID
+			]
+			
+			if pctrls:
+				est, cookie = pctrls[0].controlValue
+				if cookie:
+					lc.controlValue = (page_size, cookie)
+					msgid = self.l.search_ext(self.base, scope, ldap_filter,
+										 serverctrls=[lc])
+				else:
+					break
+			else:
+				print "Warning:  Server ignores RFC 2696 control."
+				break
+		return persons
+
 if len(sys.argv) == 1:
 	print "Usage: python ldap-test.py keyword"
 	exit()
 
-Server = "ldap://ldap.olin.edu"
-DN = data['DOMAIN_USERNAME']
-Secret = data['PASSWORD']
-un = sys.argv[1]
+server = "ldap://ldap.olin.edu"
+base = "dc=olin,dc=edu"
 
-#http://www.novell.com/communities/node/1327/sample%20code:%20paging%20searches%20edirectory,%20ldap
+dn = data['DOMAIN_USERNAME']
+secret = data['PASSWORD']
 
-Base = "dc=olin,dc=edu"
-Scope = ldap.SCOPE_SUBTREE
-Filter = "(&(objectClass=user)(givenName=*)(name=*"+un+"*))"
-Attrs = ["displayName", "c", "l", "givenName"]
-
-l = ldap.initialize(Server)
-l.set_option(ldap.OPT_REFERRALS, 0)
-l.protocol_version = 3
-print l.simple_bind_s(DN, Secret)
-
-r = l.search_ext(Base, Scope, Filter, Attrs, sizelimit=1000)
-Type,user = l.result(r, 100)
-for Name,Attrs in user:
-	if hasattr(Attrs, 'has_key'):
-		if Attrs.has_key('displayName') and Attrs.has_key('givenName'):
-			print Attrs['displayName'][0]
+keyword = sys.argv[1]
+		
+s = SimpleLDAP(server, base)
+s.authorize(dn, secret)
+print s.find_users(keyword)
 
 sys.exit()
