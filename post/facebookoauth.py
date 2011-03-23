@@ -54,7 +54,7 @@ def print_status(item, color=u'\033[1;35m'):
     print color+STATUS_TEMPLATE.format(name=item['from']['name'],
                                        message=item['message'].strip())
 
-if __name__ == '__main__':
+#if __name__ == '__main__':
     if not os.path.exists(LOCAL_FILE):
         print "Logging you in to facebook..."
         webbrowser.open(get_url('/oauth/authorize',
@@ -65,12 +65,4 @@ if __name__ == '__main__':
         httpd = BaseHTTPServer.HTTPServer(('127.0.0.1', 8080), RequestHandler)
         while ACCESS_TOKEN is None:
             httpd.handle_request()
-    else:
-        ACCESS_TOKEN = open(LOCAL_FILE).read()
-    for item in json.loads(get('/me/feed'))['data']:
-        if item['type'] == 'status':
-            print_status(item)
-            if 'comments' in item:
-                for comment in item['comments']['data']:
-                    print_status(comment, color=u'\033[1;33m')
-    print '---'
+            
