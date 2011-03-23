@@ -1,4 +1,4 @@
-import sys, ldap, re
+import sys, ldap, re, time
 from ldap.controls import SimplePagedResultsControl
 import pickle
 
@@ -30,7 +30,9 @@ class SimpleLDAP:
 	
 	def find_users(self, keyword):
 		ldap_filter = "(&(objectClass=user)(givenName=*)(name=*"+re.sub('[^a-z\s]+', '', keyword)+"*))"
-		attrs = ["displayName", "c", "l", "givenName"]
+		attrs = ["displayName", "givenName", "sn",
+				"company", "mail",
+				"streetAddress", "l", "st", "co"]
 
 		lc = SimplePagedResultsControl(
 		  ldap.LDAP_CONTROL_PAGE_OID, True, (page_size,'')
@@ -45,12 +47,30 @@ class SimpleLDAP:
 		while True:
 			pages += 1
 			#print "Getting page %d" % (pages,)
-			rtype, rdata, rmsgid, serverctrls = self.l.result3(msgid)
+			
+			# successive tries sometimes result in unavailable messages
+			tries = 5
+			try:
+				rtype, rdata, rmsgid, serverctrls = self.l.result3(msgid)
+			except ldap.UNAVAILABLE_CRITICAL_EXTENSION, e:
+				print "LDAP Error: " + str(e)
+				return persons
+				
 			#print '%d results' % len(rdata)
 			for search, attrs in rdata:
 				try:
 					if attrs.has_key('givenName') and attrs.has_key('displayName'):
-						persons.append(attrs['displayName'][0])
+						persons.append({
+							"name": attrs.get('displayName', [''])[0],
+							"given_name": attrs.get('givenName', [''])[0],
+							"surname": attrs.get('sn', [''])[0],
+							"street": attrs.get('streetAddress', [''])[0],
+							"city": attrs.get('l', [''])[0],
+							"state": attrs.get('st', [''])[0],
+							"country": attrs.get('co', [''])[0],
+							"company": attrs.get('company', [''])[0],
+							"email": attrs.get('mail', [''])[0]
+							})
 				except AttributeError, e:
 					print "Error: %s, skipping..." % str(e)
 					
