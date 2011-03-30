@@ -1,38 +1,85 @@
 
 class Person(object):
-	def name(self):
-		raise NotImplementedError
+	pass
 
 class TwitterPerson(Person):
-	def twitterHandle(self):
-		return self.twitterhandle
+	pass
 	
 class FacebookPerson(Person):
-	def phone(self):
-		return '111-111-1111'
+	pass
 	
 class GTalkPerson(Person):
-	def phone(self):
-		return '222-222-2222'
+	pass
 	
 class MetaMerge(object):
-	def __init__(self, cls, instances):
+	def __init__(self, cls, facets):
 		self.cls = cls
-		self.instances = instances
+		self.facets = facets
 		
-	def get(self, prop, args):
+	def get(self, prop):
 		l = []
-		for i in self.instances:
-			if hasattr(i, prop):
-				l.append((getattr(i, prop)(*args), i))
+		for facet in self.facets:
+			if hasattr(facet, prop):
+				l.append((getattr(facet, prop), facet))
 		return l
+		
+	def addfacet(self, facet):
+		self.facets.append(facet)
 	
 	def __getattr__(self, prop):
-		return lambda *args: self.get(prop, args)
+		return self.get(prop)
+
+class ContactBook(object):
+	def __init__(self):
+		self.contacts = []
+		self.contacts_by_name = {}
+		self.contacts_by_email = {}
+		
+	def insert(self, contactfacet):
+		email = name = c = None
+		if hasattr(contactfacet, 'email'):
+			email = contactfacet.email
+			c = self.contacts_by_email.get(email, None)
+		if hasattr(contactfacet, 'name'):
+			name = contactfacet.name.lower()
+			c = self.contacts_by_name.get(name, None)
+		
+		if c:
+			c.addfacet(contactfacet)
+		else:
+			c = MetaMerge(Person, [contactfacet])
+			self.contacts.append(c)
+			
+		if email:
+			self.contacts_by_email[email] = c
+		if name:
+			self.contacts_by_name[name] = c
+		
+			
+		
+		
 
 t = TwitterPerson()
-f = FacebookPerson()
-g = GTalkPerson()
+t.email = 'km@example.com'
+t.name = 'Kevin Mehall'
+t.twitterHandle = '@kevinmehall'
 
-m = MetaMerge(Person, [t,f,g])
-print m.phone()
+f = FacebookPerson()
+f.name = 'Kevin Mehall'
+f.phone = '111-222-3333'
+
+g = GTalkPerson()
+g.email = 'km@example.com'
+
+g2 = GTalkPerson()
+g2.email = 'test@example.com'
+g2.name = 'Test person'
+
+c = ContactBook()
+c.insert(t)
+c.insert(f)
+c.insert(g)
+c.insert(g2)
+
+print c.contacts_by_email['km@example.com']
+print c.contacts_by_email['km@example.com'].phone
