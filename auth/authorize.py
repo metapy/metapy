@@ -1,13 +1,18 @@
 import sys, pickle, getpass
 import auth.oauth1
+import facebookoauth
+
+services = []
+AUTH_FILE = "../auth.p"
 
 if len(sys.argv) == 1:
-	print "Usage: python authorize.py twitter google flickr ..."
-	print "Creates an authorization data file for use with APIs."
-
+	services = ["twitter", "google", "mailserver", "facebook"]
+else:
+	services = sys.argv[1:]
+	
 data = {}
 
-for arg in sys.argv[1:]: 
+for arg in services: 
 	print "\n########################################################################"
 	
 	if arg == "twitter":
@@ -72,10 +77,22 @@ for arg in sys.argv[1:]:
 			"PASSWORD": getpass.getpass("Password: ")
 		}
 		
+		raw_input("Hit enter to continue...")
+		
+	elif arg == "facebook":
+		data['facebook'] = {
+			'CONSUMER_KEY': "107434656002093",
+			'CONSUMER_SECRET': "4e0836947597ae34b9c13a6363909a05"
+		}
+		data["facebook"] = {"ACCESS_TOKEN" : facebookoauth.auth_main(data['facebook']['CONSUMER_KEY'], data['facebook']['CONSUMER_SECRET'])}
+		
+		raw_input("Hit enter to continue...")
 	else:
 		print "Unknown service " + arg
 	
 # write out all auth data
-AUTH_FILE = "../auth.p"
 pickle.dump(data, open(AUTH_FILE, "wb"))
 print "\nAuthorization data saved to " + AUTH_FILE
+
+
+print "#################### You are all authorized! ###################"
