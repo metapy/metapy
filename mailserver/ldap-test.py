@@ -28,8 +28,9 @@ class SimpleLDAP:
 		self.l.protocol_version = 3
 		self.l.simple_bind_s(self.dn, self.secret)
 	
-	def find_users(self, keyword):
-		ldap_filter = "(&(objectClass=user)(givenName=*)(name=*"+re.sub('[^a-z\s]+', '', keyword)+"*))"
+	def find_users_by_name(self, keyword):
+		keyword = re.sub('[^a-z\s]+', '', keyword)
+		ldap_filter = "(&(objectClass=user)(givenName=*)(name=*"+keyword+"*))"
 		attrs = ["displayName", "givenName", "sn",
 				"company", "mail",
 				"streetAddress", "l", "st", "co"]
