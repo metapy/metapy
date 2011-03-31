@@ -1,6 +1,5 @@
 import sys, pickle, getpass
-import auth.oauth1
-import facebookoauth
+import auth.oauth1, auth.oauth2
 
 services = []
 AUTH_FILE = "../auth.p"
@@ -84,15 +83,21 @@ for arg in services:
 			'CONSUMER_KEY': "107434656002093",
 			'CONSUMER_SECRET': "4e0836947597ae34b9c13a6363909a05"
 		}
-		data["facebook"] = {"ACCESS_TOKEN" : facebookoauth.auth_main(data['facebook']['CONSUMER_KEY'], data['facebook']['CONSUMER_SECRET'])}
 		
+		OAUTH_SETTINGS = {
+		  'auth_params': {"scope": "read_stream"},
+		  'endpoint': "graph.facebook.com"
+		}
+		data["facebook"]["ACCESS_TOKEN"] = auth.oauth2.get_token(OAUTH_SETTINGS,
+			data['facebook']['CONSUMER_KEY'], data['facebook']['CONSUMER_SECRET'])
+	
 		raw_input("Hit enter to continue...")
+		
 	else:
 		print "Unknown service " + arg
 	
 # write out all auth data
 pickle.dump(data, open(AUTH_FILE, "wb"))
 print "\nAuthorization data saved to " + AUTH_FILE
-
 
 print "#################### You are all authorized! ###################"
