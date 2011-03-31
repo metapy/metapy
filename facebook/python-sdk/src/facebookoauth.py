@@ -7,13 +7,7 @@ import urlparse
 import BaseHTTPServer
 import webbrowser
 
-APP_ID = '107434656002093'
-APP_SECRET = '4e0836947597ae34b9c13a6363909a05'
-ENDPOINT = 'graph.facebook.com'
-REDIRECT_URI = 'http://localhost:8080/'
-ACCESS_TOKEN = None
-LOCAL_FILE = '.fb_access_token'
-STATUS_TEMPLATE = u"{name}\033[0m: {message}"
+
 
 def get_url(path, args=None):
     args = args or {}

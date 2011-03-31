@@ -55,7 +55,7 @@ class OAuth():
 		
 	def verify_token(self, auth_url):
 		""" User-verifies token with webbrowser
-		Returns:
+		Returns:oauth_token_secret
 			the verifier token
 		"""
 		webbrowser.open(auth_url)
