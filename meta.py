@@ -1,7 +1,6 @@
 import sys, os
 
-sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)+'..'))
-from metapy.metapy import Twitter
+from metapy import Twitter
 
 class Person(object):
 	pass

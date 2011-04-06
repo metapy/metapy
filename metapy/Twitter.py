@@ -1,6 +1,6 @@
 import pickle
-from .. import  metapy
-from ..twitter import twitter
+from .  import person
+import twitter
 
 try:
 	auth = pickle.load(open("auth.p"))
