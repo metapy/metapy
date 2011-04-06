@@ -28,10 +28,9 @@ api = twitter.Api(
 # Ask for user input
 status = raw_input('Enter your message')
 
-# Post status to Twitter
-status = api.PostUpdate(status)
-print status.text
-
 # Post status to Facebook
 graph = facebook.GraphAPI(auth["facebook"]["ACCESS_TOKEN"])
 graph.put_wall_post(status)
+
+# Post status to Twitter
+status = api.PostUpdate(status)
