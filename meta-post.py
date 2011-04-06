@@ -2,5 +2,7 @@ from metapy import Facebook
 from metapy import Twitter
 
 services = [Facebook.FacebookPostService(), Twitter.TwitterPostService()]
+
+msg = raw_input("Message: ")
 for s in services:
-	s.post("[[<<< POSTING FROM METAPY >>>]]")
+	s.post(msg)
