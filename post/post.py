@@ -6,8 +6,6 @@ Created on Mar 23, 2011
 
 import facebookoauth, facebook
 import twitter, getpass
-import oauth2 as oauth
-
 import pickle
 
 # Test for auth
