@@ -1,2 +1,2 @@
 class Person(object):
-	pass
+	name = None
