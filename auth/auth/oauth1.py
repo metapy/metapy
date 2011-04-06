@@ -12,7 +12,7 @@ the authorization URL
 token.
 """
 
-import oauth2, urlparse, webbrowser, pickle
+import oauth, urlparse, webbrowser, pickle
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 
 class OAuthHTTPHandler(BaseHTTPRequestHandler):
@@ -36,12 +36,12 @@ class OAuth():
 			the Authorization URL
 		"""
 
-		consumer = oauth2.Consumer(consumer_key, consumer_secret)
-		client = oauth2.Client(consumer)
+		consumer = oauth.Consumer(consumer_key, consumer_secret)
+		client = oauth.Client(consumer)
 
-		req = oauth2.Request(method="GET", url=OAUTH_SETTINGS['request_token_url'], \
+		req = oauth.Request(method="GET", url=OAUTH_SETTINGS['request_token_url'], \
 			parameters=dict({"oauth_callback": "http://localhost:8080"}, **OAUTH_SETTINGS['auth_params']))
-		signature_method = oauth2.SignatureMethod_HMAC_SHA1()
+		signature_method = oauth.SignatureMethod_HMAC_SHA1()
 		#req.sign_request(signature_method, consumer, None)
 		resp, content = client.request(req.to_url(), "GET")
 		if resp['status'] != '200':
@@ -79,11 +79,11 @@ class OAuth():
 			the oauth token
 			the token secret
 		"""
-		consumer = oauth2.Consumer(consumer_key, consumer_secret)
-		token = oauth2.Token(oauth_token, oauth_token_secret)
-		client = oauth2.Client(consumer, token)
+		consumer = oauth.Consumer(consumer_key, consumer_secret)
+		token = oauth.Token(oauth_token, oauth_token_secret)
+		client = oauth.Client(consumer, token)
 
-		req = oauth2.Request(method="GET", url=OAUTH_SETTINGS['access_token_url'], parameters={"oauth_verifier": oauth_verifier})
+		req = oauth.Request(method="GET", url=OAUTH_SETTINGS['access_token_url'], parameters={"oauth_verifier": oauth_verifier})
 		resp, content = client.request(req.to_url(), "GET")
 		if resp['status'] != "200":
 			raise Exception(content)
