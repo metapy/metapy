@@ -1,10 +1,9 @@
 import facebook, pickle, metapy
 
-
-class FacebookPerson():
-	def __init__(self, name, idNum):
-		self.name = name
-		self.idNum = idNum
+# and code
+		
+def get_facebook_graph():
+	return facebook.GraphAPI(getFacebookAcessToken())
 
 def getFacebookAcessToken() :
 	try:
@@ -17,7 +16,7 @@ def getFacebookAcessToken() :
 	
 def createFacebookFriends(ACCESS_TOKEN):
 	processedFriends = []
-	graph = facebook.GraphAPI(ACCESS_TOKEN)
+	graph = get_facebook_graph()
 	user = graph.get_object("me")
 	friends = graph.get_connections(user["id"], "friends")
 	for friend in friends["data"]:
@@ -27,3 +26,19 @@ def createFacebookFriends(ACCESS_TOKEN):
 
 def get_contacts():
 	return createFacebookFriends(getFacebookAcessToken())
+
+# person
+
+class FacebookPerson():
+	def __init__(self, name, idNum):
+		self.name = name
+		self.idNum = idNum
+
+#
+# post
+#
+
+class FacebookPostService(metapy.PostService):
+	def post(self, msg):
+		graph = get_facebook_graph()
+		graph.put_wall_post(msg)
