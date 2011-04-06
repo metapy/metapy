@@ -1,4 +1,6 @@
-import twitter, pickle, metapy
+import pickle
+from .. import  metapy
+from ..twitter import twitter
 
 try:
 	auth = pickle.load(open("auth.p"))
