@@ -5,10 +5,6 @@ class FacebookPerson():
 	def __init__(self, name, idNum):
 		self.name = name
 		self.idNum = idNum
-		self.gender = None;
-		self.location = None;
-		self.birthday = None;
-		self.email = None;
 
 def getFacebookAcessToken() :
 	try:
@@ -26,20 +22,7 @@ def createFacebookFriends(ACCESS_TOKEN):
 	friends = graph.get_connections(user["id"], "friends")
 	for friend in friends["data"]:
 		f = FacebookPerson(friend["name"], friend["id"]);
-		try:
-			f.email = friend["email"]
-		except:
-			pass
-		try:
-			f.gender = friend["gender"]
-		except:
-			pass
-		try:
-			f.location = friend["location"]
-		except:
-			pass
 		processedFriends.append(f)
-		print f.name + f.idNum
 	return processedFriends		
 
 def get_contacts():
