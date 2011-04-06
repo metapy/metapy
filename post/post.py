@@ -6,8 +6,6 @@ Created on Mar 23, 2011
 
 import facebookoauth, facebook
 import twitter, getpass
-import oauth2 as oauth
-
 import pickle
 
 # Test for auth
@@ -29,9 +27,10 @@ api = twitter.Api(
 status = raw_input('Enter your message')
 
 # Post status to Twitter
-status = api.PostUpdate(status)
-print status.text
+#status = api.PostUpdate(status)
+#print status.text
 
 # Post status to Facebook
 graph = facebook.GraphAPI(auth["facebook"]["ACCESS_TOKEN"])
 graph.put_wall_post(status)
+print "okay"
