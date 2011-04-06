@@ -1,5 +1,5 @@
 import pickle
-from .  import person
+from .person  import Person, PostService
 import twitter
 
 try:
@@ -21,7 +21,7 @@ api = twitter.Api(
 # person
 #
 
-class TwitterPerson(metapy.Person):
+class TwitterPerson(Person):
 	def __init__(self, user):
 		self.name = user.name
 
@@ -29,7 +29,7 @@ class TwitterPerson(metapy.Person):
 # post service
 #
 
-class TwitterPostService(metapy.PostService):
+class TwitterPostService(PostService):
 	def post(self, msg):
 		api.PostUpdate(msg)
 
