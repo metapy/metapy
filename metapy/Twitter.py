@@ -1,9 +1,7 @@
-import twitter, getpass
-
-import pickle
+import twitter, pickle, metapy
 
 try:
-	auth = pickle.load(open("../auth.p"))
+	auth = pickle.load(open("auth.p"))
 	data = auth['twitter']
 except Exception:
 	print "ERROR: Run 'authorize.py twitter' first!"
@@ -17,11 +15,17 @@ api = twitter.Api(
 	access_token_secret=data['OAUTH_TOKEN_SECRET']
 	)
 
-print "People who have recently posted statuses:"
-statuses = api.GetPublicTimeline()
-print [s.user.name for s in statuses]
-print ""
+#
+# person
+#
 
-print "Your friends:"
-friends = api.GetFriends()
-print [u.name for u in friends]
+class TwitterPerson(metapy.Person):
+	def __init__(self, user):
+		self.name = user.name
+
+# 
+# contacts
+#
+
+def get_contacts():
+	return [TwitterPerson(u) for u in friends]
