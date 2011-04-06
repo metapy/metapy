@@ -23,6 +23,14 @@ class TwitterPerson(metapy.Person):
 	def __init__(self, user):
 		self.name = user.name
 
+#
+# post service
+#
+
+class TwitterPostService(metapy.PostService):
+	def post(self, msg):
+		api.PostUpdate(msg)
+
 # 
 # contacts
 #

@@ -9,3 +9,9 @@ sys.path.insert(0, "mailserver")
 
 class Person(object):
 	pass
+
+# post service
+
+class PostService(object):
+	def post(self, msg):
+		pass
