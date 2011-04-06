@@ -1,7 +1,3 @@
-import pickle
-import Facebook
-from facebook import *
-
 def getFacebookAcessToken() :
 	try:
 		auth = pickle.load(open("auth.p"))
