@@ -28,4 +28,5 @@ class TwitterPerson(metapy.Person):
 #
 
 def get_contacts():
+	friends = api.GetFriends()
 	return [TwitterPerson(u) for u in friends]
