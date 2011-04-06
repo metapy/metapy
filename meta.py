@@ -1,8 +1,6 @@
+from metapy import Twitter
 
 class Person(object):
-	pass
-
-class TwitterPerson(Person):
 	pass
 	
 class FacebookPerson(Person):
@@ -55,14 +53,11 @@ class ContactBook(object):
 		if name:
 			self.contacts_by_name[name] = c
 		
-			
-		
-		
 
-t = TwitterPerson()
-t.email = 'km@example.com'
-t.name = 'Kevin Mehall'
-t.twitterHandle = '@kevinmehall'
+#t = TwitterPerson()
+#t.email = 'km@example.com'
+#t.name = 'Kevin Mehall'
+#t.twitterHandle = '@kevinmehall'
 
 f = FacebookPerson()
 f.name = 'Kevin Mehall'
@@ -76,10 +71,13 @@ g2.email = 'test@example.com'
 g2.name = 'Test person'
 
 c = ContactBook()
-c.insert(t)
 c.insert(f)
 c.insert(g)
 c.insert(g2)
 
-print c.contacts_by_email['km@example.com']
-print c.contacts_by_email['km@example.com'].phone
+for t in Twitter.get_contacts():
+	c.insert(t)
+
+print c.contacts_by_name
+#print c.contacts_by_email['km@example.com']
+#print c.contacts_by_email['km@example.com'].phone
