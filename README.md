@@ -7,8 +7,12 @@ A Python environment for interacting with your web data.
 
 Generates our pickle'd authorization data for each API.
 
-Run the <code>authorize.py</code> script with arguments for each API you want to generate data for:
+Run the <code>authenticate.py</code> script with arguments for each API you want to generate data for:
 
-	python authorize.py twitter google flickr ...
+	python authenticate.py twitter google flickr ...
 
-This generates auth.p with your credentials.
+or for all of them:
+
+	python authenticate.py
+
+This generates a pickled data structure <code>auth.p</code> with your credentials.

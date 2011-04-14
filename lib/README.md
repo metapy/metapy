@@ -4,8 +4,26 @@ OAuth2
 ## Installation
 
 	git clone https://github.com/simplegeo/python-oauth2.git
-	cp -r python-oauth2/oauth2 ./oauth
+	mv python-oauth2/oauth2 .
 	rm -rf python-oauth2
+
+Twitter
+=======
+
+## Installation
+
+	hg clone http://python-twitter.googlecode.com/hg/ python-twitter
+	mv python-twitter/twitter.py .
+	rm -rf python-twitter
+
+Facebook
+========
+
+## Installation
+
+	git clone https://github.com/facebook/python-sdk.git
+	mv python-sdk/src/facebook.py .
+	rm -rf python-sdk
 
 Google Data
 ===========
@@ -18,7 +36,7 @@ Google Data
 
 or
 
-	sudo apt-get install python-gdata # earlier version
+	sudo apt-get install python-gdata # slightly earlier version
 
 ## Reference
 
