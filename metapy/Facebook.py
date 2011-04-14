@@ -1,4 +1,4 @@
-import facebook, pickle, metapy
+import facebook, metapy, pickle
 
 # and code
 		
@@ -29,7 +29,7 @@ def get_contacts():
 
 # person
 
-class FacebookPerson():
+class FacebookPerson(metapy.Person):
 	def __init__(self, name, idNum):
 		self.name = name
 		self.idNum = idNum

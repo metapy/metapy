@@ -1,8 +1,8 @@
 import sys, pickle, getpass
-import auth.oauth1, auth.oauth2
+from metapy import auth
 
 services = []
-AUTH_FILE = "../auth.p"
+AUTH_FILE = "auth.p"
 
 if len(sys.argv) == 1:
 	services = ["twitter", "google", "mailserver", "facebook"]
