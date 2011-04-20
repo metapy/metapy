@@ -1,5 +1,6 @@
 import sys, os
-from metapy import Twitter, Facebook, Google, Person, Mailserver
+from metapy import twitter, facebook, google, mailserver
+from metapy import Person
 
 class MetaMerge(object):
 	def __init__(self, cls, facets):
@@ -47,16 +48,16 @@ class ContactBook(object):
 
 c = ContactBook()
 
-for g in Google.get_contacts():
+for g in google.get_contacts():
 	c.insert(g)
 
-for f in Facebook.get_contacts():
+for f in facebook.get_contacts():
 	c.insert(f)
 
-for t in Twitter.get_contacts():
+for t in twitter.get_contacts():
 	c.insert(t)
 
-for t in Mailserver.get_contacts():
+for t in mailserver.get_contacts():
 	c.insert(t)
 
 for person in c.contacts_by_name.itervalues():
@@ -65,5 +66,3 @@ for person in c.contacts_by_name.itervalues():
 		print nameSources[0][0]
 		for name, source in nameSources:
 			print '\t%s: %s'%(source.serviceName, source.serviceId())
-		
-

@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import sys, ldap, re, time, metapy
 from ldap.controls import SimplePagedResultsControl
 import imaplib, smtplib, email

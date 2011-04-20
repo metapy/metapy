@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import gdata.contacts.client, gdata.photos.service
 import metapy, pickle
 
