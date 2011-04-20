@@ -1,5 +1,5 @@
 import sys, os
-from metapy import Twitter, Facebook, Person
+from metapy import Twitter, Facebook, GTalk, Person
 	
 class MetaMerge(object):
 	def __init__(self, cls, facets):
@@ -58,6 +58,9 @@ class ContactBook(object):
 #f.phone = '111-222-3333'
 
 c = ContactBook()
+
+for g in GTalk.get_contacts():
+	c.insert(g)
 
 for f in Facebook.get_contacts():
 	c.insert(f)
