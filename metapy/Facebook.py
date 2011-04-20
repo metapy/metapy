@@ -15,14 +15,21 @@ api = facebook.GraphAPI(data["ACCESS_TOKEN"])
 #
 
 class FacebookPerson(metapy.Person):
+	serviceName = "Facebook"
 	def __init__(self, friend):
 		self.name = friend["name"]
 		self.id = friend["id"]
+		
+	def serviceLink(self):
+		return 'http://www.facebook.com/profile.php?id='+self.id
+		
+	def serviceId(self):
+		return self.id
 
 def get_contacts():
 	user = api.get_object("me")
 	friends = api.get_connections(user["id"], "friends")
-	return [FacebookPerson(friend) for friend in friends["data"]]
+	return [FacebookPerson(friend) for friend in friends["data"]]		
 
 #
 # post

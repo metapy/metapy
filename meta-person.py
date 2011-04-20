@@ -10,7 +10,11 @@ class MetaMerge(object):
 		l = []
 		for facet in self.facets:
 			if hasattr(facet, prop):
-				l.append((getattr(facet, prop), facet))
+				vals = getattr(facet, prop)
+				if not isinstance(vals, list):
+					vals = [vals]
+				for v in vals:
+					l.append((v, facet))
 		return l
 		
 	def addfacet(self, facet):
@@ -23,15 +27,10 @@ class ContactBook(object):
 	def __init__(self):
 		self.contacts = []
 		self.contacts_by_name = {}
-		self.contacts_by_email = {}
 		
 	def insert(self, contactfacet):
-		email = name = c = None
+		name = c = None
 		
-		# index
-		if hasattr(contactfacet, 'email'):
-			email = contactfacet.email
-			c = self.contacts_by_email.get(email, None)
 		if hasattr(contactfacet, 'name'):
 			name = contactfacet.name.lower()
 			c = self.contacts_by_name.get(name, None)
@@ -43,19 +42,8 @@ class ContactBook(object):
 			c = MetaMerge(Person, [contactfacet])
 			self.contacts.append(c)
 		
-		if email:
-			self.contacts_by_email[email] = c
 		if name:
 			self.contacts_by_name[name] = c
-
-#t = TwitterPerson()
-#t.email = 'km@example.com'
-#t.name = 'Kevin Mehall'
-#t.twitterHandle = '@kevinmehall'
-
-#f = FacebookPerson()
-#f.name = 'Kevin Mehall'
-#f.phone = '111-222-3333'
 
 c = ContactBook()
 
@@ -68,6 +56,10 @@ for f in Facebook.get_contacts():
 for t in Twitter.get_contacts():
 	c.insert(t)
 
-print c.contacts_by_name
-#print c.contacts_by_email['km@example.com']
-#print c.contacts_by_email['km@example.com'].phone
+for person in c.contacts_by_name.itervalues():
+	nameSources = person.get('name')
+	print nameSources[0][0]
+	for name, source in nameSources:
+		print '\t%s: %s'%(source.serviceName, source.serviceId())
+		
+
