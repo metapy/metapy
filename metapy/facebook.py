@@ -1,5 +1,5 @@
 from __future__ import absolute_import
-import facebook, metapy, pickle
+import facebook, metapy, pickle, re
 
 try:
 	auth = pickle.load(open("auth.p"))
@@ -18,14 +18,16 @@ api = facebook.GraphAPI(data["ACCESS_TOKEN"])
 class FacebookPerson(metapy.Person):
 	serviceName = "Facebook"
 	def __init__(self, friend):
-		self.name = friend["name"]
-		self.id = friend["id"]
+		self.service_id = friend["id"]
+		self.name = friend["name"] or ""
+		self.given_name = re.search(r'^\S+|^', self.name).group(0)
+		self.surname = re.search(r'\S+$|$', self.name).group(0)
 		
 	def serviceLink(self):
 		return 'http://www.facebook.com/profile.php?id='+self.id
 		
 	def serviceId(self):
-		return self.id
+		return self.service_id
 
 def get_contacts():
 	user = api.get_object("me")

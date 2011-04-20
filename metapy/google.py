@@ -21,16 +21,22 @@ class GooglePerson(metapy.Person):
 	serviceName = "Google"
 	def __init__(self, entry):
 		try:
-			self.name = entry.name.full_name.text or entry.name
+			self.name = entry.name.full_name.text or ""
+			self.surname = entry.name.family_name.text or ""
+			self.given_name = entry.name.given_name.text or ""
 		except:
-			self.name = entry.name or ""
-			
+			self.name = ""
+			self.surname = ""
+			self.given_name = ""
 		self.email = [e.address for e in entry.email]
+		self.phone = [e.text for e in entry.phone_number]
+		self.service_id = entry.id.text
 			
 	def serviceLink(self):
 		return None
+		
 	def serviceId(self):
-		return ','.join(self.email)
+		return self.service_id
 
 #
 # photos

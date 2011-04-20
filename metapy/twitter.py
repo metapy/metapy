@@ -1,5 +1,5 @@
 from __future__ import absolute_import
-import twitter, metapy, pickle
+import twitter, metapy, pickle, re
 
 try:
 	auth = pickle.load(open("auth.p"))
@@ -25,7 +25,9 @@ class TwitterPerson(metapy.Person):
 	def __init__(self, user):
 		self.twitterHandle = user.screen_name
 		self.twitterLink = user.url
-		self.name = user.name
+		self.name = user.name or ""
+		self.given_name = re.search(r'^\S+|^', self.name).group(0)
+		self.surname = re.search(r'\S+$|$', self.name).group(0)
 	
 	def serviceId(self):
 		return self.twitterHandle

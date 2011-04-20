@@ -242,6 +242,8 @@ class MailserverPerson(metapy.Person):
 	def __init__(self, user):
 		self.email = user['email']
 		self.name = user['name']
+		self.surname = user['surname']
+		self.given_name = user['given_name']
 		
 	def serviceId(self):
 		return self.email

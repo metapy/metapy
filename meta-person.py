@@ -32,7 +32,10 @@ class ContactBook(object):
 	def insert(self, contactfacet):
 		name = c = None
 		
-		if hasattr(contactfacet, 'name'):
+		if hasattr(contactfacet, 'given_name') and hasattr(contactfacet, 'surname'):
+			name = contactfacet.given_name.lower() + ' ' + contactfacet.surname.lower()
+			c = self.contacts_by_name.get(name, None)
+		elif hasattr(contactfacet, 'name'):
 			name = contactfacet.name.lower()
 			c = self.contacts_by_name.get(name, None)
 		
