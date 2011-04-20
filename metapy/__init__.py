@@ -6,9 +6,8 @@ sys.path.insert(0, os.path.abspath('lib'))
 class Person(object):
 	pass
 
-# post service
+# post
 
-class PostService(object):
-	def post(self, msg):
-		pass
+class Post(object):
+	pass
 

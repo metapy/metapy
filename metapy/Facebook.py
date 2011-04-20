@@ -1,4 +1,4 @@
-import facebook, metapy, pickle
+import facebook, metapy, pickle, pprint
 
 try:
 	auth = pickle.load(open("auth.p"))
@@ -15,25 +15,27 @@ api = facebook.GraphAPI(data["ACCESS_TOKEN"])
 #
 
 class FacebookPerson(metapy.Person):
-	def __init__(self, name, idNum):
-		self.name = name
-		self.idNum = idNum
+	def __init__(self, friend):
+		self.name = friend["name"]
+		self.id = friend["id"]
+
+def get_contacts():
+	user = api.get_object("me")
+	friends = api.get_connections(user["id"], "friends")
+	return [FacebookPerson(friend) for friend in friends["data"]]
 
 #
 # post
 #
 
-class FacebookPostService(metapy.PostService):
-	def post(self, msg):
-		graph = get_facebook_graph()
-		graph.put_wall_post(msg)
+class FacebookPost(metapy.Post):
+	def __init__(self, post):
+		self.message = post["message"] if hasattr(post, "message") else ""
+		self.time = post["created_time"]
 
-#
-# contacts
-#
-
-def get_contacts():
-	processedFriends = []
-	user = api.get_object("me")
-	friends = api.get_connections(user["id"], "friends")
-	return [FacebookPerson(friend["name"], friend["id"]) for friend in friends["data"]]
+def get_latest_posts():
+	#[TODO] paging vs just 'data' object
+	return [FacebookPost(post) for post in api.get_connections("me", "feed")['data']]
+	
+def submit_post(post):
+	api.put_wall_post(post.msg)

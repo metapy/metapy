@@ -27,9 +27,17 @@ class TwitterPerson(metapy.Person):
 # post service
 #
 
-class TwitterPostService(metapy.PostService):
-	def post(self, msg):
-		api.PostUpdate(msg)
+class TwitterPost(metapy.Post):
+	def __init__(self, post):
+		self.message = post.text
+		self.time = post.created_at
+
+def get_latest_posts():
+	#[TODO] paging vs just 'data' object
+	return [TwitterPost(post) for post in api.GetFriendsTimeline()]
+
+def submit_post(msg):
+	api.PostUpdate(msg)
 
 # 
 # contacts
