@@ -17,11 +17,19 @@ contacts.auth_token = gdata.gauth.OAuthHmacToken(data['CONSUMER_KEY'], data['CON
 	data['OAUTH_TOKEN'], data['OAUTH_TOKEN_SECRET'], gdata.gauth.ACCESS_TOKEN)
 
 class GooglePerson(metapy.Person):
+	serviceName = "Google"
 	def __init__(self, entry):
 		try:
 			self.name = entry.name.full_name.text or entry.name
 		except:
 			self.name = entry.name or ""
+			
+		self.email = [e.address for e in entry.email]
+			
+	def serviceLink(self):
+		return None
+	def serviceId(self):
+		return ','.join(self.email)
 
 #
 # photos

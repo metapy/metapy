@@ -20,8 +20,18 @@ api = twitter.Api(
 #
 
 class TwitterPerson(metapy.Person):
+	serviceName = 'Twitter'
 	def __init__(self, user):
+		self.twitterHandle = user.screen_name
+		self.twitterLink = user.url
 		self.name = user.name
+	
+	def serviceId(self):
+		return self.twitterHandle
+		
+	def serviceLink(self):
+		return self.twitterLink
+		
 
 def get_contacts():
 	friends = api.GetFriends()
