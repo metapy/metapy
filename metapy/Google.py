@@ -15,7 +15,7 @@ contacts = gdata.contacts.client.ContactsClient(source='test-test-v0')
 contacts.auth_token = gdata.gauth.OAuthHmacToken(data['CONSUMER_KEY'], data['CONSUMER_SECRET'],
 	data['OAUTH_TOKEN'], data['OAUTH_TOKEN_SECRET'], gdata.gauth.ACCESS_TOKEN)
 
-class GTalkPerson(metapy.Person):
+class GooglePerson(metapy.Person):
 	def __init__(self, entry):
 		try:
 			self.name = entry.name.full_name.text or entry.name
@@ -31,4 +31,4 @@ def get_contacts():
 	q.max_results = 1000
 
 	feed = contacts.GetContacts(q=q)
-	return [GTalkPerson(entry) for entry in feed.entry]
+	return [GooglePerson(entry) for entry in feed.entry]
