@@ -108,6 +108,6 @@ keyword = sys.argv[1]
 		
 s = SimpleLDAP(server, base)
 s.authorize(dn, secret)
-print s.find_users(keyword)
+print s.find_users_by_name(keyword)
 
 sys.exit()

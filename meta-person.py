@@ -1,6 +1,6 @@
 import sys, os
-from metapy import Twitter, Facebook, Google, Person
-	
+from metapy import Twitter, Facebook, Google, Person, Mailserver
+
 class MetaMerge(object):
 	def __init__(self, cls, facets):
 		self.cls = cls
@@ -56,10 +56,14 @@ for f in Facebook.get_contacts():
 for t in Twitter.get_contacts():
 	c.insert(t)
 
+for t in Mailserver.get_contacts():
+	c.insert(t)
+
 for person in c.contacts_by_name.itervalues():
 	nameSources = person.get('name')
-	print nameSources[0][0]
-	for name, source in nameSources:
-		print '\t%s: %s'%(source.serviceName, source.serviceId())
+	if len(nameSources) > 3:
+		print nameSources[0][0]
+		for name, source in nameSources:
+			print '\t%s: %s'%(source.serviceName, source.serviceId())
 		
 
