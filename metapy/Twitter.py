@@ -23,8 +23,12 @@ class TwitterPerson(metapy.Person):
 	def __init__(self, user):
 		self.name = user.name
 
+def get_contacts():
+	friends = api.GetFriends()
+	return [TwitterPerson(u) for u in friends]
+
 #
-# post service
+# post
 #
 
 class TwitterPost(metapy.Post):
@@ -39,11 +43,3 @@ def get_latest_posts():
 
 def submit_post(msg):
 	api.PostUpdate(msg)
-
-# 
-# contacts
-#
-
-def get_contacts():
-	friends = api.GetFriends()
-	return [TwitterPerson(u) for u in friends]

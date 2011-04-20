@@ -59,7 +59,7 @@ class ContactBook(object):
 
 c = ContactBook()
 
-for g in GTalk.get_contacts():
+for g in Google.get_contacts():
 	c.insert(g)
 
 for f in Facebook.get_contacts():
