@@ -31,6 +31,7 @@ class TwitterPost(metapy.Post):
 	def __init__(self, post):
 		self.message = post.text
 		self.time = post.created_at
+		self.service_id = post.id
 
 def get_latest_posts():
 	#[TODO] paging vs just 'data' object

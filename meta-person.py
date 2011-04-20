@@ -1,5 +1,5 @@
 import sys, os
-from metapy import Twitter, Facebook, GTalk, Person
+from metapy import Twitter, Facebook, Google, Person
 	
 class MetaMerge(object):
 	def __init__(self, cls, facets):

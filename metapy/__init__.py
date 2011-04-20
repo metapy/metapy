@@ -11,3 +11,10 @@ class Person(object):
 class Post(object):
 	pass
 
+# photo
+
+class Gallery(object):
+	pass
+
+class Photo(object):
+	pass

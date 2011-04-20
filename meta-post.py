@@ -1,9 +1,9 @@
 from metapy import Facebook, Twitter
 
-#services = [Facebook.FacebookPostService(), Twitter.TwitterPostService()]
 #msg = raw_input("Message: ")
-#for s in services:
-#	s.post(msg)
+#services = [Facebook.submit_post, Twitter.submit_post]
+#for submit_post in services:
+#	submit_post(msg)
 
-print Facebook.get_latest_posts()
-print Twitter.get_latest_posts()
+Facebook.get_latest_posts()
+Twitter.get_latest_posts()
