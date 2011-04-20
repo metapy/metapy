@@ -1,10 +1,7 @@
 import sys, os
-from metapy import Twitter
+from metapy import Twitter, Facebook
 
 class Person(object):
-	pass
-	
-class FacebookPerson(Person):
 	pass
 	
 class GTalkPerson(Person):
@@ -36,6 +33,8 @@ class ContactBook(object):
 		
 	def insert(self, contactfacet):
 		email = name = c = None
+		
+		# index
 		if hasattr(contactfacet, 'email'):
 			email = contactfacet.email
 			c = self.contacts_by_email.get(email, None)
@@ -43,38 +42,31 @@ class ContactBook(object):
 			name = contactfacet.name.lower()
 			c = self.contacts_by_name.get(name, None)
 		
+		# add person
 		if c:
 			c.addfacet(contactfacet)
 		else:
 			c = MetaMerge(Person, [contactfacet])
 			self.contacts.append(c)
-			
+		
 		if email:
 			self.contacts_by_email[email] = c
 		if name:
 			self.contacts_by_name[name] = c
-		
 
 #t = TwitterPerson()
 #t.email = 'km@example.com'
 #t.name = 'Kevin Mehall'
 #t.twitterHandle = '@kevinmehall'
 
-f = FacebookPerson()
-f.name = 'Kevin Mehall'
-f.phone = '111-222-3333'
-
-g = GTalkPerson()
-g.email = 'km@example.com'
-
-g2 = GTalkPerson()
-g2.email = 'test@example.com'
-g2.name = 'Test person'
+#f = FacebookPerson()
+#f.name = 'Kevin Mehall'
+#f.phone = '111-222-3333'
 
 c = ContactBook()
-c.insert(f)
-c.insert(g)
-c.insert(g2)
+
+for f in Facebook.get_contacts():
+	c.insert(f)
 
 for t in Twitter.get_contacts():
 	c.insert(t)

@@ -1,33 +1,18 @@
 import facebook, metapy, pickle
 
-# and code
-		
-def get_facebook_graph():
-	return facebook.GraphAPI(getFacebookAcessToken())
+try:
+	auth = pickle.load(open("auth.p"))
+	data = auth['facebook']
+except Exception:
+	print "ERROR: Run 'authorize.py facebook' first!"
+	exit()
 
-def getFacebookAcessToken() :
-	try:
-		auth = pickle.load(open("auth.p"))
-		data = auth['facebook']
-	except Exception:
-		print "ERROR: Run 'authorize.py facebook' first!"
-		exit()
-	return data["ACCESS_TOKEN"]
-	
-def createFacebookFriends(ACCESS_TOKEN):
-	processedFriends = []
-	graph = get_facebook_graph()
-	user = graph.get_object("me")
-	friends = graph.get_connections(user["id"], "friends")
-	for friend in friends["data"]:
-		f = FacebookPerson(friend["name"], friend["id"]);
-		processedFriends.append(f)
-	return processedFriends		
+# API
+api = facebook.GraphAPI(data["ACCESS_TOKEN"])
 
-def get_contacts():
-	return createFacebookFriends(getFacebookAcessToken())
-
+#
 # person
+#
 
 class FacebookPerson(metapy.Person):
 	def __init__(self, name, idNum):
@@ -42,3 +27,13 @@ class FacebookPostService(metapy.PostService):
 	def post(self, msg):
 		graph = get_facebook_graph()
 		graph.put_wall_post(msg)
+
+#
+# contacts
+#
+
+def get_contacts():
+	processedFriends = []
+	user = api.get_object("me")
+	friends = api.get_connections(user["id"], "friends")
+	return [FacebookPerson(friend["name"], friend["id"]) for friend in friends["data"]]

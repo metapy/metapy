@@ -1,6 +1,4 @@
 import twitter, metapy, pickle
-import pickle
-from metapy import Person, PostService
 
 try:
 	auth = pickle.load(open("auth.p"))
@@ -9,7 +7,7 @@ except Exception:
 	print "ERROR: Run 'authorize.py twitter' first!"
 	exit()
 
-# API stuff
+# API
 api = twitter.Api(
 	consumer_key=data['CONSUMER_KEY'],
 	consumer_secret=data['CONSUMER_SECRET'],
