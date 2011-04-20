@@ -1,4 +1,5 @@
-import gdata.contacts.client, metapy, pickle
+import gdata.contacts.client, gdata.photos.service
+import metapy, pickle
 
 try:
 	auth = pickle.load(open("auth.p"))
@@ -22,6 +23,17 @@ class GooglePerson(metapy.Person):
 		except:
 			self.name = entry.name or ""
 
+#
+# photos
+#			
+
+class GooglePhoto(metapy.Photo):
+	def __init__(self, photo):
+		#print photo.title.text
+		self.source = photo.GetMediaURL()
+		self.width = int(photo.width.text)
+		self.height = int(photo.height.text)
+
 def get_contacts():
 	groups = contacts.GetGroups()
 	contactsGroup = groups.entry[0]
@@ -32,3 +44,25 @@ def get_contacts():
 
 	feed = contacts.GetContacts(q=q)
 	return [GooglePerson(entry) for entry in feed.entry]
+
+# 2.0.13 doesn't have a client for photos, using service
+OAUTH_SCOPES = "http://picasaweb.google.com/data/"
+photos = gdata.photos.service.PhotosService(source='test-test-v0')
+photos.SetOAuthInputParameters(gdata.auth.OAuthSignatureMethod.HMAC_SHA1, \
+	data['CONSUMER_KEY'], consumer_secret=data['CONSUMER_SECRET'])
+oauth_input_params = gdata.auth.OAuthInputParams(gdata.auth.OAuthSignatureMethod.HMAC_SHA1, \
+	data['CONSUMER_KEY'], consumer_secret=data['CONSUMER_SECRET']) 
+photos.SetOAuthToken(gdata.auth.OAuthToken(key=data['OAUTH_TOKEN'], secret=data['OAUTH_TOKEN_SECRET'], \
+	scopes=OAUTH_SCOPES, oauth_input_params=oauth_input_params))
+
+#http://gdata-python-client.googlecode.com/svn/trunk/pydocs/gdata.photos.service.html#PhotosService
+#http://gdata-python-client.googlecode.com/svn/trunk/pydocs/gdata.photos.html#AlbumEntry
+
+def get_latest_photos():
+	# get all albums
+	feed = photos.GetUserFeed()
+	res = []
+	for album in feed.entry:
+		for photo in photos.GetFeed(album.GetPhotosUri()).entry:
+			res.append(GooglePhoto(photo))
+	return res

@@ -1,3 +1,4 @@
-from metapy import Facebook, Twitter
+from metapy import Facebook, Twitter, Google
 
-Facebook.get_latest_photos()
+print Facebook.get_latest_photos()
+print Google.get_latest_photos()
