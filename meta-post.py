@@ -5,4 +5,5 @@ from metapy import Facebook, Twitter
 #for s in services:
 #	s.post(msg)
 
+print Facebook.get_latest_posts()
 print Twitter.get_latest_posts()
